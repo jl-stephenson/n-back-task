@@ -45,7 +45,7 @@ export default function App() {
 
   useEffect(() => {
     function handleKeyPress(event: KeyboardEvent) {
-      if (event.key === "m" && isMatchRef.current) {
+      if (event.key.toLowerCase() === "m" && isMatchRef.current) {
       setTrial((prevTrial) => {
         const newCount = prevTrial.correctCount + 1;
         return {
@@ -55,7 +55,7 @@ export default function App() {
       });
     }
   
-      if (event.key === "m" && !isMatchRef.current) {
+      if (event.key.toLowerCase() === "m" && !isMatchRef.current) {
       setTrial((prevTrial) => {
         const newCount = prevTrial.missCount + 1;
         return {

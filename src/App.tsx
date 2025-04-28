@@ -26,7 +26,8 @@ export default function App() {
 
     currentLetterRef.current = LETTERS[index];
 
-    isMatchRef.current = index >= 2 && currentLetterRef.current === LETTERS[index - 2];
+    isMatchRef.current =
+      index >= 2 && currentLetterRef.current === LETTERS[index - 2];
 
     setDisplayLetter(LETTERS[index]);
     const hideTimeout = setTimeout(() => {
@@ -45,30 +46,19 @@ export default function App() {
 
   useEffect(() => {
     function handleKeyPress(event: KeyboardEvent) {
-      if (event.key.toLowerCase() === "m" && isMatchRef.current) {
-      setTrial((prevTrial) => {
-        const newCount = prevTrial.correctCount + 1;
-        return {
-          ...prevTrial,
-          correctCount: newCount,
-        };
-      });
+      if (event.key.toLowerCase() === "m") {
+        setTrial((prevTrial) => {
+          const field = isMatchRef.current ? "correctCount" : "missCount";
+          const newCount = prevTrial[field] + 1;
+          return {
+            ...prevTrial,
+            [field]: newCount,
+          };
+        });
+      }
     }
-  
-      if (event.key.toLowerCase() === "m" && !isMatchRef.current) {
-      setTrial((prevTrial) => {
-        const newCount = prevTrial.missCount + 1;
-        return {
-          ...prevTrial,
-          missCount: newCount,
-        };
-      });
-    }
-  
-      console.log(trial);
-    }
-    window.addEventListener("keydown", handleKeyPress);
 
+    window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
 

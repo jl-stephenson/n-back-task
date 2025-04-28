@@ -1,28 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const LETTERS = ["A", "B", "A", "D", "E", "F", "E"];
 
 export default function App() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
-
-  const array = ["A", "B", "C", "D", "E", "F"];
+  const currentLetterRef = useRef("");
 
   useEffect(() => {
-    if (index >= array.length) return;
+    if (index >= LETTERS.length) return;
 
-    setDisplayLetter(array[index]);
+    currentLetterRef.current = LETTERS[index];
 
-    const hideInterval = setInterval(() => {
+    setDisplayLetter(LETTERS[index]);
+    const hideTimeout = setTimeout(() => {
       setDisplayLetter("");
     }, 500);
 
-    const nextLetterInterval = setInterval(() => {
+    const nextLetterTimeout = setTimeout(() => {
       setIndex((index) => index + 1);
     }, 3000);
 
     return () => {
-      clearInterval(hideInterval);
-      clearInterval(nextLetterInterval)};
-  }, [array.length, index]);
+      clearInterval(hideTimeout);
+      clearInterval(nextLetterTimeout);
+    };
+  }, [index]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 const LETTERS = ["A", "B", "A", "D", "E", "F", "E"];
 const MAX_ERRORS = 2;
@@ -70,10 +70,13 @@ export default function App() {
     trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
     index >= LETTERS.length;
 
+  const isMatch = useMemo(
+    () => index >= 2 && LETTERS[index] === LETTERS[index - 2],
+    [index]
+  );
+
   useEffect(() => {
     if (isEnd) return;
-
-    const isMatch = index >= 2 && LETTERS[index] === LETTERS[index - 2];
 
     setDisplayLetter(LETTERS[index]);
 
@@ -93,7 +96,7 @@ export default function App() {
       clearTimeout(hideTimeout);
       clearTimeout(nextLetterTimeout);
     };
-  }, [index, isEnd]);
+  }, [index, isEnd, isMatch]);
 
   useEffect(() => {
     if (isEnd) return;
@@ -101,7 +104,6 @@ export default function App() {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "m") return;
 
-      const isMatch = index >= 2 && LETTERS[index] === LETTERS[index - 2];
       isKeydownRef.current = true;
 
       dispatch({ type: isMatch ? "identified_correct" : "false_alarm" });
@@ -110,7 +112,7 @@ export default function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [index, isEnd]);
+  }, [index, isEnd, isMatch]);
 
   return (
     <>

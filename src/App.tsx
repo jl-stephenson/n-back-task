@@ -1,64 +1,100 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 const LETTERS = ["A", "B", "A", "D", "E", "F", "E"];
+const MAX_ERRORS = 2;
 
 type Trial = {
   id: number;
-  timeStarted: number;
+  timestamp: number;
   correctCount: number;
   falseAlarmCount: number;
   missCount: number;
 };
 
+type Action =
+  | { type: "started" }
+  | { type: "false_alarm" }
+  | { type: "identified_correct" }
+  | { type: "missed" };
+
+const initialTrial: Trial = {
+  id: 0,
+  timestamp: 0,
+  correctCount: 0,
+  falseAlarmCount: 0,
+  missCount: 0,
+};
+
+function trialReducer(trial: Trial, action: Action) {
+  switch (action.type) {
+    case "started": {
+      const now = Date.now();
+      return {
+        id: now,
+        timestamp: now,
+        correctCount: 0,
+        falseAlarmCount: 0,
+        missCount: 0,
+      };
+    }
+    case "identified_correct": {
+      return {
+        ...trial,
+        correctCount: trial.correctCount + 1,
+      };
+    }
+    case "false_alarm": {
+      return {
+        ...trial,
+        falseAlarmCount: trial.falseAlarmCount + 1,
+      };
+    }
+    case "missed": {
+      return {
+        ...trial,
+        missCount: trial.missCount + 1,
+      };
+    }
+    default: {
+      return trial;
+    }
+  }
+}
+
 export default function App() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
-  const [isKeydown, setIsKeydown] = useState(false);
-  const [isEnd, setIsEnd] = useState(false);
-  const [trial, setTrial] = useState<Trial>({
-    id: Date.now(),
-    timeStarted: Date.now(),
-    correctCount: 0,
-    falseAlarmCount: 0,
-    missCount: 0,
-  });
+  const [trial, dispatch] = useReducer(trialReducer, initialTrial);
+  const isKeydownRef = useRef(false);
+  const alreadyHandledRef = useRef(false);
 
-  const isMatchRef = useRef(false);
-  const currentLetterRef = useRef("");
+  const isEnd =
+    trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
+    index >= LETTERS.length;
+
+  const isMatch = useMemo(
+    () => index >= 2 && LETTERS[index] === LETTERS[index - 2],
+    [index]
+  );
+
+  useEffect(() => {
+    dispatch({ type: "started" });
+  }, []);
 
   useEffect(() => {
     if (isEnd) return;
-    if (!isKeydown && isMatchRef.current) {
-      setTrial((prevTrial) => {
-        const newCount = prevTrial.missCount + 1;
-        return {
-          ...prevTrial,
-          missCount: newCount,
-        };
-      });
-    }
-
-    setIsKeydown(false);
-
-    if (
-      index >= LETTERS.length ||
-      trial.falseAlarmCount + trial.missCount >= 2
-    ) {
-      setIsEnd(true);
-      return;
-    }
-
-    currentLetterRef.current = LETTERS[index];
-
-    isMatchRef.current =
-      index >= 2 && currentLetterRef.current === LETTERS[index - 2];
 
     setDisplayLetter(LETTERS[index]);
+
     const hideTimeout = setTimeout(() => {
       setDisplayLetter("");
     }, 500);
 
     const nextLetterTimeout = setTimeout(() => {
+      if (isMatch && !isKeydownRef.current) {
+        dispatch({ type: "missed" });
+      }
+      isKeydownRef.current = false;
       setIndex((index) => index + 1);
     }, 3000);
 
@@ -66,32 +102,32 @@ export default function App() {
       clearTimeout(hideTimeout);
       clearTimeout(nextLetterTimeout);
     };
-  }, [index, isKeydown, trial.falseAlarmCount, trial.missCount, isEnd]);
+  }, [index, isEnd, isMatch]);
 
   useEffect(() => {
-    function handleKeyPress(event: KeyboardEvent) {
-      if (isEnd) return;
-      setIsKeydown(true);
-      if (event.key.toLowerCase() === "m") {
-        setTrial((prevTrial) => {
-          const field = isMatchRef.current ? "correctCount" : "falseAlarmCount";
-          const newCount = prevTrial[field] + 1;
-          return {
-            ...prevTrial,
-            [field]: newCount,
-          };
-        });
-      }
-    }
+    if (isEnd) return;
 
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key.toLowerCase() !== "m") return;
+      if (alreadyHandledRef.current) return;
+
+      isKeydownRef.current = true;
+      alreadyHandledRef.current = true;
+
+
+      dispatch({ type: isMatch ? "identified_correct" : "false_alarm" });
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      alreadyHandledRef.current = false;
+    };
+  }, [index, isEnd, isMatch]);
 
   return (
     <>
       <div>
-        <h1>{displayLetter}</h1>
+        {!isEnd && <h1>{displayLetter}</h1>}
         {isEnd && (
           <div>
             <h2>Results</h2>

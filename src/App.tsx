@@ -76,6 +76,10 @@ export default function App() {
   );
 
   useEffect(() => {
+    dispatch({ type: "started" });
+  }, []);
+
+  useEffect(() => {
     if (isEnd) return;
 
     setDisplayLetter(LETTERS[index]);

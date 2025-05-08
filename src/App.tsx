@@ -11,13 +11,13 @@ type Trial = {
   missCount: number;
 };
 
-type Action = 
-{type: "started"} |
-{type: "false_alarm"} |
-{type: "identified_correct"} |
-{type: "missed"};
+type Action =
+  | { type: "started" }
+  | { type: "false_alarm" }
+  | { type: "identified_correct" }
+  | { type: "missed" };
 
-const initialTrial = {
+const initialTrial: Trial = {
   id: 0,
   timestamp: 0,
   correctCount: 0,
@@ -25,35 +25,37 @@ const initialTrial = {
   missCount: 0,
 };
 
-function trialReducer(state: Trial, action: Action) {
+function trialReducer(trial: Trial, action: Action) {
   switch (action.type) {
     case "started": {
       return {
-        ...state,
         id: Date.now(),
         timestamp: Date.now(),
+        correctCount: 0,
+        falseAlarmCount: 0,
+        missCount: 0,
       };
     }
     case "identified_correct": {
       return {
-        ...state,
-        correctCount: state.correctCount + 1,
+        ...trial,
+        correctCount: trial.correctCount + 1,
       };
     }
     case "false_alarm": {
       return {
-        ...state,
-        falseAlarmCount: state.falseAlarmCount + 1,
+        ...trial,
+        falseAlarmCount: trial.falseAlarmCount + 1,
       };
     }
     case "missed": {
       return {
-        ...state,
-        missCount: state.missCount + 1,
+        ...trial,
+        missCount: trial.missCount + 1,
       };
     }
     default: {
-      return state;
+      return trial;
     }
   }
 }
@@ -62,10 +64,10 @@ export default function App() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
   const isKeydownRef = useRef(false);
-  const [state, dispatch] = useReducer(trialReducer, initialTrial);
+  const [trial, dispatch] = useReducer(trialReducer, initialTrial);
 
   const isEnd =
-    state.falseAlarmCount + state.missCount >= MAX_ERRORS ||
+    trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
     index >= LETTERS.length;
 
   useEffect(() => {
@@ -94,8 +96,10 @@ export default function App() {
   }, [index, isEnd]);
 
   useEffect(() => {
+    if (isEnd) return;
+
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key.toLowerCase() !== "m" || isEnd) return;
+      if (event.key.toLowerCase() !== "m") return;
 
       const isMatch = index >= 2 && LETTERS[index] === LETTERS[index - 2];
       isKeydownRef.current = true;
@@ -108,8 +112,6 @@ export default function App() {
     };
   }, [index, isEnd]);
 
-
-
   return (
     <>
       <div>
@@ -117,9 +119,9 @@ export default function App() {
         {isEnd && (
           <div>
             <h2>Results</h2>
-            <p>Total Correct: {state.correctCount}</p>
-            <p>Total False Alarms: {state.falseAlarmCount}</p>
-            <p>Total Misses: {state.missCount}</p>
+            <p>Total Correct: {trial.correctCount}</p>
+            <p>Total False Alarms: {trial.falseAlarmCount}</p>
+            <p>Total Misses: {trial.missCount}</p>
           </div>
         )}
       </div>

@@ -63,8 +63,9 @@ function trialReducer(trial: Trial, action: Action) {
 export default function App() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
-  const isKeydownRef = useRef(false);
   const [trial, dispatch] = useReducer(trialReducer, initialTrial);
+  const isKeydownRef = useRef(false);
+  const alreadyHandledRef = useRef(false);
 
   const isEnd =
     trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
@@ -107,14 +108,18 @@ export default function App() {
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "m") return;
+      if (alreadyHandledRef.current) return;
 
       isKeydownRef.current = true;
+      alreadyHandledRef.current = true;
+
 
       dispatch({ type: isMatch ? "identified_correct" : "false_alarm" });
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      alreadyHandledRef.current = false;
     };
   }, [index, isEnd, isMatch]);
 

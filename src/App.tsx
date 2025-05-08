@@ -28,9 +28,10 @@ const initialTrial: Trial = {
 function trialReducer(trial: Trial, action: Action) {
   switch (action.type) {
     case "started": {
+      const now = Date.now();
       return {
-        id: Date.now(),
-        timestamp: Date.now(),
+        id: now,
+        timestamp: now,
         correctCount: 0,
         falseAlarmCount: 0,
         missCount: 0,

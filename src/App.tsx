@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const LETTERS = [
   "A",
@@ -160,6 +161,7 @@ export default function App() {
     const nextLetterTimeout = setTimeout(() => {
       if (isMatch && !isKeydownRef.current) {
         dispatch({ type: "missed" });
+        toast.error("Missed match");
       }
       isKeydownRef.current = false;
       setIndex((index) => index + 1);
@@ -181,7 +183,13 @@ export default function App() {
       isKeydownRef.current = true;
       alreadyHandledRef.current = true;
 
-      dispatch({ type: isMatch ? "identified_correct" : "false_alarm" });
+      if (isMatch) {
+        dispatch({ type: "identified_correct" });
+        toast.success("Correctly identified match");
+      } else {
+        dispatch({ type: "false_alarm" });
+        toast.error("False alarm");
+      }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -203,6 +211,7 @@ export default function App() {
           <p>Total Misses: {trial.missCount}</p>
         </div>
       )}
+      <Toaster position="bottom-right" />
     </main>
   );
 }

@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
 const LETTERS = [
   "A",
@@ -86,15 +93,31 @@ function trialReducer(trial: Trial, action: Action) {
 
 function LandingScreen({ onStart }: LandingScreenProps) {
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    if (!name.trim()) {
+      setError("Please enter your name");
+      return;
+    }
+
+    onStart(name);
+  }
+
   return (
     <main>
-      <label htmlFor="name">Enter your name</label>
-      <input
-        id="name"
-        placeholder="John Smith"
-        onChange={(event) => setName(event?.currentTarget.value)}
-      />
-      <button onClick={() => onStart(name)}>Start Game</button>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="name">Enter your name</label>
+        <input
+          id="name"
+          placeholder="John Smith"
+          onChange={(event) => setName(event?.currentTarget.value)}
+        />
+        {error && <p>{error}</p>}
+        <button type="submit">Start Game</button>
+      </form>
     </main>
   );
 }

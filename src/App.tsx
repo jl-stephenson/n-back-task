@@ -108,21 +108,22 @@ function LandingScreen({ onStart }: LandingScreenProps) {
   }
 
   return (
-    <main>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name</label>
+    <main className="grid min-h-svh place-content-center">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center">
+        <label htmlFor="name">Enter your name:</label>
         <input
           id="name"
-          placeholder="John Smith"
+          placeholder="Name"
           value={name}
+          className="text-center border-b-2 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onChange={(event) => {
             setName(event?.currentTarget.value);
             if (error) setError("");
           }}
           aria-required="true"
         />
-        {error && <p role="alert">{error}</p>}
-        <button type="submit">Start Game</button>
+        {error && <p role="alert" className="text-red-500">{error}</p>}
+        <button type="submit" className="border-2 p-2 hover:cursor-pointer hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">Start Game</button>
       </form>
     </main>
   );
@@ -201,14 +202,14 @@ export default function App() {
   if (trial.username === "") return <LandingScreen onStart={onStart} />;
 
   return (
-    <main>
-      {!isEnd && <h1>{displayLetter}</h1>}
+    <main className="grid min-h-svh place-content-center">
+      {!isEnd && <p className="text-7xl">{displayLetter}</p>}
       {isEnd && (
-        <div>
-          <h2>Results</h2>
-          <p>Total Correct: {trial.correctCount}</p>
-          <p>Total False Alarms: {trial.falseAlarmCount}</p>
-          <p>Total Misses: {trial.missCount}</p>
+        <div className="flex flex-col gap-4 items-center text-2xl">
+          <h2 className="font-medium">Results:</h2>
+          <p className="font-light">Total Correct: {trial.correctCount}</p>
+          <p className="font-light">Total False Alarms: {trial.falseAlarmCount}</p>
+          <p className="font-light">Total Misses: {trial.missCount}</p>
         </div>
       )}
       <Toaster position="bottom-right" />

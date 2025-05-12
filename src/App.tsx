@@ -26,6 +26,7 @@ const LETTERS = [
   "L",
 ];
 const MAX_ERRORS = 2;
+const MAX_LETTERS = 15;
 
 type Trial = {
   id: number;
@@ -138,7 +139,7 @@ export default function App() {
 
   const isEnd =
     trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
-    index >= LETTERS.length;
+    index >= MAX_LETTERS;
 
   const isMatch = useMemo(
     () => index >= 2 && LETTERS[index] === LETTERS[index - 2],

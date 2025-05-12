@@ -103,7 +103,7 @@ function LandingScreen({ onStart }: LandingScreenProps) {
       return;
     }
 
-    onStart(name);
+    onStart(name.trim());
   }
 
   return (
@@ -113,9 +113,14 @@ function LandingScreen({ onStart }: LandingScreenProps) {
         <input
           id="name"
           placeholder="John Smith"
-          onChange={(event) => setName(event?.currentTarget.value)}
+          value={name}
+          onChange={(event) => {
+            setName(event?.currentTarget.value);
+            if (error) setError("");
+          }}
+          aria-required="true"
         />
-        {error && <p>{error}</p>}
+        {error && <p role="alert">{error}</p>}
         <button type="submit">Start Game</button>
       </form>
     </main>
@@ -185,7 +190,7 @@ export default function App() {
     };
   }, [index, isEnd, isMatch]);
 
-  if (!trial.username) return <LandingScreen onStart={onStart} />;
+  if (trial.username === "") return <LandingScreen onStart={onStart} />;
 
   return (
     <main>

@@ -50,7 +50,6 @@ const initialTrial: Trial = {
 
 export function TrialContextProvider({ children }: { children: ReactNode }) {
     const [trial, dispatch] = useReducer(trialReducer, initialTrial);
-   
   
     return (
       <TrialContext.Provider value={{ trial, dispatch }}>

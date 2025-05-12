@@ -27,16 +27,19 @@ export function Task() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
 
-  const isKeydownRef = useRef(false);
-  const alreadyHandledRef = useRef(false);
+  const isKeydownRef = useRef<boolean>(false);
+  const alreadyHandledRef = useRef<boolean>(false);
 
   const { trial, dispatch } = useTrialContext();
 
   const navigate = useNavigate();
 
-  const isEnd =
-    trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
-    index >= MAX_LETTERS;
+  const isEnd = useMemo(
+    () =>
+      trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
+      index >= MAX_LETTERS,
+    [index, trial.falseAlarmCount, trial.missCount],
+  );
 
   const isMatch = useMemo(
     () => index >= 2 && LETTERS[index] === LETTERS[index - 2],
@@ -95,7 +98,7 @@ export function Task() {
 
   return (
     <>
-     <p className="text-7xl">{displayLetter}</p>
+      <p className="text-7xl">{displayLetter}</p>
     </>
   );
 }

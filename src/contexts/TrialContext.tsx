@@ -14,7 +14,7 @@ export function useTrialContext() {
 
   if (!context) {
     throw new Error(
-      "TrialContext not found. Make sure the components is wrapped in Provider.",
+      "TrialContext not found. Make sure the component is wrapped in Provider.",
     );
   }
 

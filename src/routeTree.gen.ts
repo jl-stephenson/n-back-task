@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TaskImport } from './routes/task'
+import { Route as ResultsImport } from './routes/results'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 const TaskRoute = TaskImport.update({
   id: '/task',
   path: '/task',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ResultsRoute = ResultsImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,6 +46,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsImport
+      parentRoute: typeof rootRoute
+    }
     '/task': {
       id: '/task'
       path: '/task'
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/task': typeof TaskRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/task': typeof TaskRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/results': typeof ResultsRoute
   '/task': typeof TaskRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/task'
+  fullPaths: '/' | '/results' | '/task'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/task'
-  id: '__root__' | '/' | '/task'
+  to: '/' | '/results' | '/task'
+  id: '__root__' | '/' | '/results' | '/task'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResultsRoute: typeof ResultsRoute
   TaskRoute: typeof TaskRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResultsRoute: ResultsRoute,
   TaskRoute: TaskRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/results",
         "/task"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/results": {
+      "filePath": "results.tsx"
     },
     "/task": {
       "filePath": "task.tsx"

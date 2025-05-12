@@ -108,13 +108,14 @@ function LandingScreen({ onStart }: LandingScreenProps) {
   }
 
   return (
-    <main>
-      <form onSubmit={handleSubmit}>
+    <main className="grid min-h-svh place-content-center">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center">
         <label htmlFor="name">Enter your name</label>
         <input
           id="name"
           placeholder="John Smith"
           value={name}
+          className="text-center border-b-2 p-2"
           onChange={(event) => {
             setName(event?.currentTarget.value);
             if (error) setError("");
@@ -201,14 +202,14 @@ export default function App() {
   if (trial.username === "") return <LandingScreen onStart={onStart} />;
 
   return (
-    <main>
-      {!isEnd && <h1>{displayLetter}</h1>}
+    <main className="grid min-h-svh place-content-center">
+      {!isEnd && <h1 className="text-7xl">{displayLetter}</h1>}
       {isEnd && (
-        <div>
-          <h2>Results</h2>
-          <p>Total Correct: {trial.correctCount}</p>
-          <p>Total False Alarms: {trial.falseAlarmCount}</p>
-          <p>Total Misses: {trial.missCount}</p>
+        <div className="flex flex-col gap-4 items-center text-2xl">
+          <h2 className="font-medium">Results:</h2>
+          <p className="font-light">Total Correct: {trial.correctCount}</p>
+          <p className="font-light">Total False Alarms: {trial.falseAlarmCount}</p>
+          <p className="font-light">Total Misses: {trial.missCount}</p>
         </div>
       )}
       <Toaster position="bottom-right" />

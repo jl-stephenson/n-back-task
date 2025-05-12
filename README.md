@@ -1,6 +1,6 @@
 # N-Back Game
 
-An implementation of the 2-back version of the N-back task. 
+An implementation of the 2-back version of the N-back task. A live demo is hosted on [Vercel](https://n-back-task-eosin.vercel.app/). 
 
 ## Useful Scripts
 
@@ -14,3 +14,8 @@ An implementation of the 2-back version of the N-back task.
 - Once completed the app shows the number of errors and the number of correct answers
 - A mock interaction with an `/event` API, demonstrated with a toast
 - UI is mobile compatible
+
+## To Do
+
+- Test suite
+- Improve styling

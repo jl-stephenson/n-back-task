@@ -9,7 +9,7 @@ type TrialContext = { trial: Trial; dispatch: Dispatch<Action> };
 
 export const TrialContext = createContext<TrialContext | null>(null);
 
-export function useTrial() {
+export function useTrialContext() {
   const context = useContext(TrialContext);
 
   if (!context) {

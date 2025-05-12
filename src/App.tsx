@@ -114,7 +114,6 @@ export default function App() {
       isKeydownRef.current = true;
       alreadyHandledRef.current = true;
 
-
       dispatch({ type: isMatch ? "identified_correct" : "false_alarm" });
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -125,18 +124,16 @@ export default function App() {
   }, [index, isEnd, isMatch]);
 
   return (
-    <>
-      <div>
-        {!isEnd && <h1>{displayLetter}</h1>}
-        {isEnd && (
-          <div>
-            <h2>Results</h2>
-            <p>Total Correct: {trial.correctCount}</p>
-            <p>Total False Alarms: {trial.falseAlarmCount}</p>
-            <p>Total Misses: {trial.missCount}</p>
-          </div>
-        )}
-      </div>
-    </>
+    <main>
+      {!isEnd && <h1>{displayLetter}</h1>}
+      {isEnd && (
+        <div>
+          <h2>Results</h2>
+          <p>Total Correct: {trial.correctCount}</p>
+          <p>Total False Alarms: {trial.falseAlarmCount}</p>
+          <p>Total Misses: {trial.missCount}</p>
+        </div>
+      )}
+    </main>
   );
 }

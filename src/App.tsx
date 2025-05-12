@@ -1,10 +1,27 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
-const LETTERS = ["A", "B", "A", "D", "E", "F", "E"];
+const LETTERS = [
+  "A",
+  "S",
+  "A",
+  "D",
+  "N",
+  "F",
+  "N",
+  "N",
+  "Q",
+  "B",
+  "Q",
+  "Z",
+  "L",
+  "K",
+  "L",
+];
 const MAX_ERRORS = 2;
 
 type Trial = {
   id: number;
+  username: string;
   timestamp: number;
   correctCount: number;
   falseAlarmCount: number;
@@ -12,13 +29,18 @@ type Trial = {
 };
 
 type Action =
-  | { type: "started" }
+  | { type: "started"; name: string }
   | { type: "false_alarm" }
   | { type: "identified_correct" }
   | { type: "missed" };
 
+type LandingScreenProps = {
+  onStart: (name: string) => void;
+};
+
 const initialTrial: Trial = {
   id: 0,
+  username: "",
   timestamp: 0,
   correctCount: 0,
   falseAlarmCount: 0,
@@ -31,6 +53,7 @@ function trialReducer(trial: Trial, action: Action) {
       const now = Date.now();
       return {
         id: now,
+        username: action.name,
         timestamp: now,
         correctCount: 0,
         falseAlarmCount: 0,
@@ -61,6 +84,21 @@ function trialReducer(trial: Trial, action: Action) {
   }
 }
 
+function LandingScreen({ onStart }: LandingScreenProps) {
+  const [name, setName] = useState("");
+  return (
+    <main>
+      <label htmlFor="name">Enter your name</label>
+      <input
+        id="name"
+        placeholder="John Smith"
+        onChange={(event) => setName(event?.currentTarget.value)}
+      />
+      <button onClick={() => onStart(name)}>Start Game</button>
+    </main>
+  );
+}
+
 export default function App() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
@@ -77,9 +115,10 @@ export default function App() {
     [index]
   );
 
-  useEffect(() => {
-    dispatch({ type: "started" });
-  }, []);
+  function onStart(name: string) {
+    dispatch({ type: "started", name });
+    setIndex(0);
+  }
 
   useEffect(() => {
     if (isEnd) return;
@@ -122,6 +161,8 @@ export default function App() {
       alreadyHandledRef.current = false;
     };
   }, [index, isEnd, isMatch]);
+
+  if (!trial.username) return <LandingScreen onStart={onStart} />;
 
   return (
     <main>

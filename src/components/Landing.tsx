@@ -11,12 +11,14 @@ export function Landing() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+
+    if (trimmedName === "") {
       setError("Please enter your name");
       return;
     }
 
-    dispatch({ type: "name_given", name: name.trim() });
+    dispatch({ type: "name_given", name: trimmedName });
     navigate({ to: "/intro" });
   }
 

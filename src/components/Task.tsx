@@ -27,8 +27,8 @@ export function Task() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
 
-  const isKeydownRef = useRef<boolean>(false);
-  const alreadyHandledRef = useRef<boolean>(false);
+  const isKeydownRef = useRef(false);
+  const alreadyHandledRef = useRef(false);
 
   const { trial, dispatch } = useTrialContext();
 

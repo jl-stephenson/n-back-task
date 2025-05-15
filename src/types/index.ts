@@ -8,7 +8,8 @@ export type Trial = {
 };
 
 export type Action =
-  | { type: "started"; name: string }
+  | { type: "name_given"; name: string }
+  | { type: "started" }
   | { type: "false_alarm" }
   | { type: "identified_correct" }
   | { type: "missed" };

@@ -11,17 +11,22 @@ export function Landing() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+
+    if (trimmedName === "") {
       setError("Please enter your name");
       return;
     }
 
-    dispatch({ type: "started", name: name.trim() });
-    navigate({ to: "/task" });
+    dispatch({ type: "name_given", name: trimmedName });
+    navigate({ to: "/intro" });
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6 items-center text-2xl">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-6 items-center text-xl"
+    >
       <label htmlFor="name">Enter your name:</label>
       <input
         id="name"
@@ -35,15 +40,15 @@ export function Landing() {
         aria-required="true"
       />
       {error && (
-        <p role="alert" className="text-red-500">
+        <p role="alert" className="text-red-500 text-[1rem]">
           {error}
         </p>
       )}
       <button
         type="submit"
-        className="border-2 p-2 hover:cursor-pointer hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="border-2 p-2 hover:cursor-pointer hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
       >
-        Start Game
+        Continue
       </button>
     </form>
   );

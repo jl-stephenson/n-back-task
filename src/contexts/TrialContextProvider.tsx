@@ -1,6 +1,6 @@
 import { ReactNode, useReducer } from "react";
 import { TrialContext } from "./TrialContext";
-import { Action, Trial } from "@/utils/types";
+import { Action, Trial } from "@/types/index";
 
 const initialTrial: Trial = {
     id: 0,
@@ -11,13 +11,19 @@ const initialTrial: Trial = {
     missCount: 0,
   };
 
-  function trialReducer(trial: Trial, action: Action) {
+  function trialReducer(state: Trial, action: Action) {
     switch (action.type) {
+      case "name_given": {
+        return {
+          ...state,
+          username: action.name,
+        }
+      }
       case "started": {
         const now = Date.now();
         return {
+          ...state,
           id: now,
-          username: action.name,
           timestamp: now,
           correctCount: 0,
           falseAlarmCount: 0,
@@ -26,33 +32,33 @@ const initialTrial: Trial = {
       }
       case "identified_correct": {
         return {
-          ...trial,
-          correctCount: trial.correctCount + 1,
+          ...state,
+          correctCount: state.correctCount + 1,
         };
       }
       case "false_alarm": {
         return {
-          ...trial,
-          falseAlarmCount: trial.falseAlarmCount + 1,
+          ...state,
+          falseAlarmCount: state.falseAlarmCount + 1,
         };
       }
       case "missed": {
         return {
-          ...trial,
-          missCount: trial.missCount + 1,
+          ...state,
+          missCount: state.missCount + 1,
         };
       }
       default: {
-        return trial;
+        return state;
       }
     }
   }
 
 export function TrialContextProvider({ children }: { children: ReactNode }) {
-    const [trial, dispatch] = useReducer(trialReducer, initialTrial);
+    const [state, dispatch] = useReducer(trialReducer, initialTrial);
   
     return (
-      <TrialContext.Provider value={{ trial, dispatch }}>
+      <TrialContext.Provider value={{ state, dispatch }}>
         {children}
       </TrialContext.Provider>
     );

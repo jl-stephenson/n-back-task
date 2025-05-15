@@ -1,7 +1,7 @@
 import { Action, Trial } from "@/types/index";
 import { createContext, Dispatch, useContext } from "react";
 
-type TrialContext = { trial: Trial; dispatch: Dispatch<Action> };
+type TrialContext = { state: Trial; dispatch: Dispatch<Action> };
 
 export const TrialContext = createContext<TrialContext | null>(null);
 

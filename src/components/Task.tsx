@@ -30,15 +30,15 @@ export function Task() {
   const isKeydownRef = useRef(false);
   const alreadyHandledRef = useRef(false);
 
-  const { trial, dispatch } = useTrialContext();
+  const { state, dispatch } = useTrialContext();
 
   const navigate = useNavigate();
 
   const isEnd = useMemo(
     () =>
-      trial.falseAlarmCount + trial.missCount >= MAX_ERRORS ||
+      state.falseAlarmCount + state.missCount >= MAX_ERRORS ||
       index >= MAX_LETTERS,
-    [index, trial.falseAlarmCount, trial.missCount],
+    [index, state.falseAlarmCount, state.missCount],
   );
 
   const isMatch = useMemo(

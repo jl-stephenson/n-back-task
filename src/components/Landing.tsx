@@ -25,7 +25,7 @@ export function Landing() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-6 items-center text-2xl"
+      className="flex flex-col gap-6 items-center text-xl"
     >
       <label htmlFor="name">Enter your name:</label>
       <input
@@ -46,7 +46,7 @@ export function Landing() {
       )}
       <button
         type="submit"
-        className="border-2 p-2 hover:cursor-pointer hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-xl"
+        className="border-2 p-2 hover:cursor-pointer hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
       >
         Continue
       </button>

@@ -14,7 +14,7 @@ export function Intro() {
       <h2 className="text-center text-2xl font-medium">
         Welcome to the N-Back Game
       </h2>
-      <p>
+      <p className="max-w-[50ch]">
         In this game, you will see letters. Each letter is shown for 0.5
         seconds. You have 3 seconds total per letter to decide if you saw the
         same letter 2 letters ago.

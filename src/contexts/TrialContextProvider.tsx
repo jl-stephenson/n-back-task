@@ -1,6 +1,6 @@
 import { ReactNode, useReducer } from "react";
 import { TrialContext } from "./TrialContext";
-import { Action, Trial } from "@/utils/types";
+import { Action, Trial } from "@/types/index";
 
 const initialTrial: Trial = {
     id: 0,

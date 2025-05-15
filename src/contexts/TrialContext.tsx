@@ -1,9 +1,5 @@
-import { Action, Trial } from "@/utils/types";
-import {
-  createContext,
-  Dispatch,
-  useContext,
-} from "react";
+import { Action, Trial } from "@/types/index";
+import { createContext, Dispatch, useContext } from "react";
 
 type TrialContext = { trial: Trial; dispatch: Dispatch<Action> };
 
@@ -20,5 +16,3 @@ export function useTrialContext() {
 
   return context;
 }
-
-

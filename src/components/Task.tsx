@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import toast from "react-hot-toast";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEventListener, useInterval } from "usehooks-ts";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTrialContext } from "@/contexts/TrialContext";
 
 const LETTERS = [
@@ -27,8 +28,7 @@ export function Task() {
   const [displayLetter, setDisplayLetter] = useState("");
   const [index, setIndex] = useState(0);
 
-  const isKeydownRef = useRef(false);
-  const alreadyHandledRef = useRef(false);
+  const keyHandledRef = useRef(false);
 
   const { state, dispatch } = useTrialContext();
 
@@ -46,40 +46,39 @@ export function Task() {
     [index],
   );
 
+  useInterval(
+    () => {
+      if (isEnd) return;
+
+      if (isMatch && !keyHandledRef.current) {
+        dispatch({ type: "missed" });
+        toast.error("Missed match");
+      }
+      keyHandledRef.current = false;
+      setIndex((index) => index + 1);
+    },
+    isEnd ? null : 3000,
+  );
+
   useEffect(() => {
     if (isEnd) {
       navigate({ to: "/results" });
       return;
     }
-
     setDisplayLetter(LETTERS[index]);
 
-    const hideTimeout = setTimeout(() => {
-      setDisplayLetter("");
-    }, 500);
-
-    const nextLetterTimeout = setTimeout(() => {
-      if (isMatch && !isKeydownRef.current) {
-        dispatch({ type: "missed" });
-        toast.error("Missed match");
-      }
-      isKeydownRef.current = false;
-      setIndex((index) => index + 1);
-    }, 3000);
+    const hideTimeout = setTimeout(() => setDisplayLetter(""), 500);
 
     return () => {
       clearTimeout(hideTimeout);
-      clearTimeout(nextLetterTimeout);
     };
-  }, [dispatch, index, isEnd, isMatch, navigate]);
+  }, [index, isEnd, navigate]);
 
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key.toLowerCase() !== "m") return;
-      if (alreadyHandledRef.current) return;
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== "m" || keyHandledRef.current) return;
 
-      isKeydownRef.current = true;
-      alreadyHandledRef.current = true;
+      keyHandledRef.current = true;
 
       if (isMatch) {
         dispatch({ type: "identified_correct" });
@@ -88,13 +87,11 @@ export function Task() {
         dispatch({ type: "false_alarm" });
         toast.error("False alarm");
       }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      alreadyHandledRef.current = false;
-    };
-  }, [dispatch, isMatch]);
+    },
+    [dispatch, isMatch],
+  );
+
+  useEventListener("keydown", handleKeyDown);
 
   return <p className="text-7xl">{displayLetter}</p>;
 }

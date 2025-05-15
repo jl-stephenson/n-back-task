@@ -13,11 +13,17 @@ const initialTrial: Trial = {
 
   function trialReducer(trial: Trial, action: Action) {
     switch (action.type) {
+      case "name_given": {
+        return {
+          ...trial,
+          username: action.name,
+        }
+      }
       case "started": {
         const now = Date.now();
         return {
+          ...trial,
           id: now,
-          username: action.name,
           timestamp: now,
           correctCount: 0,
           falseAlarmCount: 0,

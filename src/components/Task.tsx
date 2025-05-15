@@ -96,9 +96,5 @@ export function Task() {
     };
   }, [dispatch, isMatch]);
 
-  return (
-    <>
-      <p className="text-7xl">{displayLetter}</p>
-    </>
-  );
+  return <p className="text-7xl">{displayLetter}</p>;
 }

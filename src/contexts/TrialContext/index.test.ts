@@ -12,7 +12,7 @@ describe("trialReducer", () => {
     expect(trialReducer(initialTrial, action)).toEqual(expectedState);
   });
 
-  it("should handle started action", () => {
+  it("correctly handles started action", () => {
     const mockTimestamp = 1234567890;
     vi.spyOn(Date, "now").mockReturnValue(mockTimestamp);
 
@@ -28,5 +28,29 @@ describe("trialReducer", () => {
 
     expect(trialReducer(initialTrial, action)).toEqual(expectedState);
     vi.restoreAllMocks();
+  });
+
+  it("correctly handles identified_correct action", () => {
+    const initialState = { ...initialTrial, correctCount: 1 };
+    const expectedState = { ...initialTrial, correctCount: 2 };
+    const action: Action = { type: "identified_correct" };
+
+    expect(trialReducer(initialState, action)).toEqual(expectedState);
+  });
+
+  it("correctly handles false_alarm action", () => {
+    const initialState = { ...initialTrial, falseAlarmCount: 1 };
+    const expectedState = { ...initialTrial, falseAlarmCount: 2 };
+    const action: Action = { type: "false_alarm" };
+
+    expect(trialReducer(initialState, action)).toEqual(expectedState);
+  });
+
+  it("correctly handles missed action", () => {
+    const initialState = { ...initialTrial, missCount: 1 };
+    const expectedState = { ...initialTrial, missCount: 2 };
+    const action: Action = { type: "missed" };
+
+    expect(trialReducer(initialState, action)).toEqual(expectedState);
   });
 });

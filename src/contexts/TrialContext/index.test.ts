@@ -53,4 +53,10 @@ describe("trialReducer", () => {
 
     expect(trialReducer(initialState, action)).toEqual(expectedState);
   });
+
+  it("correctly handles default", () => {
+    const action: Action = { type: "nonsense" };
+
+    expect(trialReducer(initialTrial, action)).toEqual(initialTrial);
+  });
 });

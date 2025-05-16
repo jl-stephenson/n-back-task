@@ -14,20 +14,23 @@ describe("trialReducer", () => {
 
   it("correctly handles started action", () => {
     const mockTimestamp = 1234567890;
-    vi.spyOn(Date, "now").mockReturnValue(mockTimestamp);
+    vi.useFakeTimers({ now: mockTimestamp });
+    
+    try {
+      const action: Action = { type: "started" };
+      const expectedState: Trial = {
+        ...initialTrial,
+        id: mockTimestamp,
+        timestamp: mockTimestamp,
+        correctCount: 0,
+        falseAlarmCount: 0,
+        missCount: 0,
+      };
 
-    const action: Action = { type: "started" };
-    const expectedState: Trial = {
-      ...initialTrial,
-      id: mockTimestamp,
-      timestamp: mockTimestamp,
-      correctCount: 0,
-      falseAlarmCount: 0,
-      missCount: 0,
-    };
-
-    expect(trialReducer(initialTrial, action)).toEqual(expectedState);
-    vi.restoreAllMocks();
+      expect(trialReducer(initialTrial, action)).toEqual(expectedState);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("correctly handles identified_correct action", () => {

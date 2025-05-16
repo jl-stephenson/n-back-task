@@ -93,5 +93,9 @@ export function Task() {
 
   useEventListener("keydown", handleKeyDown);
 
-  return <p className="text-7xl">{displayLetter}</p>;
+  return (
+    <p className="text-7xl" data-testid="display-letter">
+      {displayLetter}
+    </p>
+  );
 }

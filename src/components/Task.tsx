@@ -23,6 +23,8 @@ const LETTERS = [
 ];
 const MAX_ERRORS = 2;
 const MAX_LETTERS = 15;
+const DISPLAY_MS = Number(import.meta.env.VITE_DISPLAY_MS) || 500;
+const LETTER_MS = Number(import.meta.env.VITE_LETTER_MS) || 3000;
 
 export function Task() {
   const [displayLetter, setDisplayLetter] = useState("");
@@ -57,7 +59,7 @@ export function Task() {
       keyHandledRef.current = false;
       setIndex((index) => index + 1);
     },
-    isEnd ? null : 3000,
+    isEnd ? null : LETTER_MS,
   );
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export function Task() {
     }
     setDisplayLetter(LETTERS[index]);
 
-    const hideTimeout = setTimeout(() => setDisplayLetter(""), 500);
+    const hideTimeout = setTimeout(() => setDisplayLetter(""), DISPLAY_MS);
 
     return () => {
       clearTimeout(hideTimeout);

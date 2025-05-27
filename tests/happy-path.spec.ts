@@ -12,8 +12,13 @@ test("happy path to results", async ({ page }) => {
   await page.getByRole("button", { name: /start game/i }).click();
   await expect(page).toHaveURL(/\/task$/);
 
-  await expect(page.getByTestId("display-letter")).toHaveText("A");
-  await page.clock.runFor(200);
+  const letter = page.getByTestId("display-letter");
+  await expect(letter).toHaveText("A");
+  await page.clock.runFor(50);
+  await expect(letter).toHaveText("");
+  await page.clock.runFor(50);
+  await expect(letter).toHaveText("S");
+  await page.clock.runFor(100);
   await expect(page.getByTestId("display-letter")).toHaveText("A");
   await page.keyboard.press("m");
   await expect(page.getByText("Correctly identified match")).toBeVisible();

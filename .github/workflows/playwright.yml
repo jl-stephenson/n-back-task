@@ -22,7 +22,7 @@ jobs:
         env:
           VITE_DISPLAY_MS: "50"
           VITE_LETTER_MS: "100"
-          VITE_TEST_LETTERS: '["A", "S", "A", "B", "A", "C", "B"]'
+          VITE_TEST_LETTERS: '["A", "B", "A", "C", "A"]'
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

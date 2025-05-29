@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("happy path to results", async ({ page }) => {
+test("happy path to correct results", async ({ page }) => {
   await page.goto("http://localhost:5173/");
 
   await page.getByRole("textbox").fill("Test");
@@ -16,19 +16,37 @@ test("happy path to results", async ({ page }) => {
   const letterMs = Number(process.env.VITE_LETTER_MS) || 100;
 
   const letter = page.getByTestId("display-letter");
+
+  // Position 0: A - check Letter Hide
   await expect(letter).toHaveText("A");
   await page.clock.runFor(displayMs);
   await expect(letter).toHaveText("");
-  await page.clock.runFor(displayMs);
-  await expect(letter).toHaveText("S");
+  await page.clock.runFor(letterMs - displayMs);
+
+  // Position 1: B
+  await expect(letter).toHaveText("B");
   await page.clock.runFor(letterMs);
-  await expect(page.getByTestId("display-letter")).toHaveText("A");
+
+  // Position 2: A - Correct
+  await expect(letter).toHaveText("A");
   await page.keyboard.press("m");
   await expect(page.getByText("Correctly identified match")).toBeVisible();
+  await page.clock.runFor(letterMs);
+
+  // Position 3: C - False Alarm
+  await expect(letter).toHaveText("C");
+  await page.keyboard.press("m");
+  await expect(page.getByText("False alarm")).toBeVisible();
+  await page.clock.runFor(letterMs);
+
+  // Position 4: A - Miss
+  await expect(letter).toHaveText("A");
+  await page.clock.runFor(letterMs);
+  await expect(page.getByText("Missed match")).toBeVisible();
 
   await expect(page).toHaveURL(/\/results$/);
 
   await expect(page.getByText("Total Correct: 1")).toBeVisible();
-  await expect(page.getByText("Total False Alarms: 0")).toBeVisible();
-  await expect(page.getByText("Total Misses: 2")).toBeVisible();
+  await expect(page.getByText("Total False Alarms: 1")).toBeVisible();
+  await expect(page.getByText("Total Misses: 1")).toBeVisible();
 });

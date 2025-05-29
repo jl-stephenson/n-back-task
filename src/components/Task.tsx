@@ -4,7 +4,7 @@ import { useEventListener, useInterval } from "usehooks-ts";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTrialContext } from "@/contexts/TrialContext";
 
-const LETTERS = [
+const DEFAULT_LETTERS = [
   "A",
   "S",
   "A",
@@ -21,6 +21,20 @@ const LETTERS = [
   "K",
   "L",
 ];
+
+function getLetterSequence(): string[] {
+  const testLetters = import.meta.env.VITE_TEST_LETTERS;
+  if (testLetters) {
+    try {
+      return JSON.parse(testLetters);
+    } catch {
+      console.warn("Invalid VITE_TEST_LETTERS, using default letters");
+    }
+  }
+  return DEFAULT_LETTERS;
+}
+
+const LETTERS = getLetterSequence();
 const MAX_ERRORS = 2;
 const MAX_LETTERS = 15;
 const DISPLAY_MS = Number(import.meta.env.VITE_DISPLAY_MS) || 500;

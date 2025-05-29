@@ -33,6 +33,7 @@ export default defineConfig({
     env: {
       VITE_DISPLAY_MS: "50",
       VITE_LETTER_MS: "100",
+      VITE_TEST_LETTERS: JSON.stringify(["A", "B", "A", "C", "A"]),
     },
   },
 });

@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("happy path to correct results", async ({ page }) => {
-  await page.clock.install({ time: 0 });
+  await page.clock.install({ time: new Date("2024-01-01T00:00:00Z") });
 
   await page.goto("http://localhost:5173/");
 
@@ -9,7 +9,10 @@ test("happy path to correct results", async ({ page }) => {
   await page.getByRole("button", { name: /continue/i }).click();
   await expect(page).toHaveURL(/\/intro$/);
 
+  await page.clock.pauseAt(new Date("2024-01-01T08:00:00"));
+
   await page.getByRole("button", { name: /start game/i }).click();
+
   await expect(page).toHaveURL(/\/task$/);
 
   const displayMs = 50;

@@ -1,19 +1,19 @@
 import { test, expect } from "@playwright/test";
 
 test("happy path to correct results", async ({ page }) => {
+  await page.clock.install({ time: 0 });
+
   await page.goto("http://localhost:5173/");
 
   await page.getByRole("textbox").fill("Test");
   await page.getByRole("button", { name: /continue/i }).click();
   await expect(page).toHaveURL(/\/intro$/);
 
-  await page.clock.install({ time: 0 });
-
   await page.getByRole("button", { name: /start game/i }).click();
   await expect(page).toHaveURL(/\/task$/);
 
-  const displayMs = Number(process.env.VITE_DISPLAY_MS) || 50;
-  const letterMs = Number(process.env.VITE_LETTER_MS) || 100;
+  const displayMs = 50;
+  const letterMs = 100;
 
   const letter = page.getByTestId("display-letter");
 

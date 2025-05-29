@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-const displayMs = Number(process.env.VITE_DISPLAY_MS) || 50;
-const letterMs = Number(process.env.VITE_LETTER_MS) || 100;
+const displayMs = 50;
+const letterMs = 100;
 
 test("happy path to correct results", async ({ page }) => {
   await page.clock.install({ time: 0 });

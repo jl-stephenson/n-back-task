@@ -26,7 +26,16 @@ function getLetterSequence(): string[] {
   const testLetters = import.meta.env.VITE_TEST_LETTERS;
   if (testLetters) {
     try {
-      return JSON.parse(testLetters);
+      const parsedLetters = JSON.parse(testLetters);
+      if (
+        Array.isArray(parsedLetters) &&
+        parsedLetters.every((item) => typeof item === "string")
+      ) {
+        return parsedLetters;
+      }
+      console.warn(
+        "VITE_TEST_LETTERS must be an array of strings, using default letters",
+      );
     } catch {
       console.warn("Invalid VITE_TEST_LETTERS, using default letters");
     }

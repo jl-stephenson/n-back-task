@@ -1,8 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-const displayMs = 50;
-const letterMs = 100;
-
 test("happy path to correct results", async ({ page }) => {
   await page.clock.install({ time: 0 });
 
@@ -14,6 +11,9 @@ test("happy path to correct results", async ({ page }) => {
 
   await page.getByRole("button", { name: /start game/i }).click();
   await expect(page).toHaveURL(/\/task$/);
+
+  const displayMs = 50;
+  const letterMs = 100;
 
   const letter = page.getByTestId("display-letter");
 

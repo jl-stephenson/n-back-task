@@ -12,4 +12,5 @@ export type Action =
   | { type: "started" }
   | { type: "false_alarm" }
   | { type: "identified_correct" }
-  | { type: "missed" };
+  | { type: "missed" }
+  | { type: "restart" };

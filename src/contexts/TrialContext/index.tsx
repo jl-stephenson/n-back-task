@@ -63,6 +63,9 @@ export function trialReducer(state: Trial, action: Action) {
         missCount: state.missCount + 1,
       };
     }
+    case "restart": {
+      return initialTrial;
+    }
     default: {
       return state;
     }

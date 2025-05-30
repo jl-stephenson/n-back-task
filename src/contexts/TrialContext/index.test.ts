@@ -15,7 +15,7 @@ describe("trialReducer", () => {
   it("correctly handles started action", () => {
     const mockTimestamp = 1234567890;
     vi.useFakeTimers({ now: mockTimestamp });
-    
+
     try {
       const action: Action = { type: "started" };
       const expectedState: Trial = {
@@ -53,6 +53,14 @@ describe("trialReducer", () => {
     const initialState = { ...initialTrial, missCount: 1 };
     const expectedState = { ...initialTrial, missCount: 2 };
     const action: Action = { type: "missed" };
+
+    expect(trialReducer(initialState, action)).toEqual(expectedState);
+  });
+
+  it("correctly handles restart action", () => {
+    const initialState = { ...initialTrial, username: "Test", correctCount: 1 };
+    const expectedState = initialTrial;
+    const action: Action = { type: "restart" };
 
     expect(trialReducer(initialState, action)).toEqual(expectedState);
   });
